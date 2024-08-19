@@ -12,3 +12,4 @@ class GameConfig:
     TITLE: str = "UniverseCatch"
     VERSION: str = "0.1.0"
     FPS: int = 60
+    INITIAL_SCENE_ID: str = "intro"
