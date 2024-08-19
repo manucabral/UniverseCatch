@@ -12,13 +12,14 @@ class Scene(ABC):
     A scene is a collection of entities that are rendered together.
     """
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, controller):
         """
         Create a new scene with the given name.
 
         Args:
             name (str): The name of the scene.
         """
+        self.controller = controller
         self.name = name
         self.done = False
 
@@ -35,9 +36,14 @@ class Scene(ABC):
         """
 
     @abstractmethod
-    def update(self):
+    def update(self, screen: pyg.Surface, delta_time: float):
         """
         Update the scene.
+
+
+        Args:
+            screen (pyg.Surface): The screen to render the scene on.
+            delta_time (float): The time since the last update
         """
 
     @abstractmethod
