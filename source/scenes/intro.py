@@ -2,6 +2,7 @@
 Intro scene module.
 """
 
+import pygame
 from ..scene import Scene
 from ..constants import Colors
 from ..components import Button
@@ -24,15 +25,16 @@ class IntroScene(Scene):
     def on_enter(self):
         self.buttons.append(
             Button(
-                100,
-                100,
-                200,
-                50,
-                "Test",
-                30,
-                Colors.BLUE,
-                Colors.LIGHT_BLUE,
-                lambda: self.controller.change_scene("game"),
+                action=lambda: self.controller.change_scene("game"),
+                text="Start",
+                font=pygame.font.Font(None, 50),
+                font_size=50,
+                font_color=Colors.WHITE,
+                color=Colors.BLUE,
+                size=(200, 100),
+                position=(300, 300),
+                name="start_button",
+                scene=self,
             )
         )
 

@@ -3,57 +3,54 @@ This module contains the Button class.
 """
 
 import pygame as pyg
+from .component import Component
 
 
-class Button:
+class Button(Component):
     """
-    A button is an interactive element that can be clicked.
+    A button component.
     """
 
     def __init__(
         self,
-        x: int,
-        y: int,
-        width: int,
-        height: int,
         text: str,
+        font: pyg.font.Font,
         font_size: int,
-        color: tuple[int, int, int],
-        hover_color: tuple[int, int, int],
+        font_color: tuple[int, int, int],
         action: callable,
+        *args,
+        **kwargs,
     ):
-        self.rect = pyg.Rect(x, y, width, height)
-        self.text = text
-        self.font = pyg.font.Font(None, font_size)
-        self.color = color
-        self.hover_color = hover_color
-        self.action = action
-        self.hovered = False
+        """
+        Create a new button.
 
-    def draw(self, screen: pyg.Surface):
+        Args:
+            text (str): The text to display on the button.
+            font (pyg.font.Font): The font to use for the text.
+            font_size (int): The size of the font.
+            font_color (tuple[int, int, int]): The color of the font.
+
+        Inherited Args:
+            See Component class.
+        """
+        super().__init__(*args, **kwargs)
+        self.text = text
+        self.font = font
+        self.font_size = font_size
+        self.font_color = font_color
+        self.font_object = self.font.render(self.text, True, self.font_color)
+        self.font_rect = self.font_object.get_rect(center=self.rect.center)
+        self.action = action
+
+    def draw(self, screen: pyg.Surface) -> None:
         """
         Draw the button on the screen.
-
-        Args:
-            screen (pyg.Surface): The screen to draw the button on.
         """
-        color = self.hover_color if self.hovered else self.color
-        pyg.draw.rect(screen, color, self.rect)
-        text = self.font.render(self.text, True, (255, 255, 255))
-        text_rect = text.get_rect(center=self.rect.center)
-        screen.blit(text, text_rect)
+        super().draw(screen)
+        pyg.draw.rect(screen, self.color, self.rect)
+        screen.blit(self.font_object, self.font_rect)
 
-    def handle_event(self, event: pyg.event.Event):
-        """
-        Handle an event.
-
-        Args:
-            event (pyg.event.Event): The event to handle.
-        """
-        if event.type == pyg.MOUSEMOTION:
-            pyg.mouse.set_system_cursor(
-                pyg.SYSTEM_CURSOR_HAND if self.hovered else pyg.SYSTEM_CURSOR_ARROW
-            )
-            self.hovered = self.rect.collidepoint(event.pos)
-        elif event.type == pyg.MOUSEBUTTONDOWN and self.hovered:
-            self.action()
+    def handle_event(self, event: pyg.event.Event) -> None:
+        if event.type == pyg.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                self.action()
