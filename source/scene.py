@@ -4,6 +4,7 @@ Eg. The intro, main menu, the game itself, etc.
 """
 
 from abc import ABC, abstractmethod
+import pygame as pyg
 
 
 class Scene(ABC):
@@ -46,7 +47,10 @@ class Scene(ABC):
         """
 
     @abstractmethod
-    def handle_event(self, event):
+    def handle_event(self, event: pyg.event.Event):
         """
         Handle an event.
+
+        Args:
+            event (pyg.event.Event): The event to handle.
         """
