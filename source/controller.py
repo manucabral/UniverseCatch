@@ -7,7 +7,6 @@ import os
 import pygame as pyg
 from .scene import Scene
 from .constants import DisplayConfig, Colors, GameConfig
-from .scenes import IntroScene
 
 
 class Controller:
