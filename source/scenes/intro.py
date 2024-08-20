@@ -4,8 +4,9 @@ Intro scene module.
 
 import pygame
 from ..scene import Scene
-from ..constants import Colors
+from ..constants import Colors, GameConfig
 from ..components import Button
+from ..components import Text
 
 
 class IntroScene(Scene):
@@ -21,8 +22,22 @@ class IntroScene(Scene):
         """
         super().__init__("intro", controller)
         self.buttons: list[Button] = []
+        self.texts: list[Text] = []
 
     def on_enter(self):
+        self.texts.append(
+            Text(
+                text=f"Welcome to {GameConfig.TITLE}",
+                font=pygame.font.Font(None, 50),
+                font_size=50,
+                font_color=Colors.WHITE,
+                position=(10, 50),
+                scene=self,
+                size=(400, 100),
+                color=Colors.WHITE,
+                name="title_text",
+            )
+        )
         self.buttons.append(
             Button(
                 action=lambda: self.controller.change_scene("game"),
