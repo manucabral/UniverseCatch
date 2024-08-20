@@ -31,7 +31,7 @@ class IntroScene(Scene):
                 font=pygame.font.Font(None, 50),
                 font_size=50,
                 font_color=Colors.WHITE,
-                position=(10, 50),
+                position=(200, 200),
                 scene=self,
                 size=(400, 100),
                 color=Colors.WHITE,
@@ -56,14 +56,16 @@ class IntroScene(Scene):
     def on_exit(self):
         self.buttons.clear()
 
-    def update(self, screen, delta_time):
+    def update(self, screen, delta_time) -> None:
         screen.fill(Colors.BLACK)
         for button in self.buttons:
             button.draw(screen)
+        for text in self.texts:
+            text.draw(screen)
 
     def render(self):
         pass
 
-    def handle_event(self, event):
+    def handle_event(self, event) -> None:
         for button in self.buttons:
             button.handle_event(event)
