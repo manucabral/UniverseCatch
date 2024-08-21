@@ -7,6 +7,7 @@ import os
 import pygame as pyg
 from .scene import Scene
 from .constants import DisplayConfig, Colors, GameConfig
+from .resource_loader import ResourceLoader
 
 
 class Controller:
@@ -23,6 +24,7 @@ class Controller:
         self.clock: pyg.time.Clock = None
         self.running: bool = True
         self.debug: bool = GameConfig.DEBUG
+        self.resource_loader: ResourceLoader = ResourceLoader(resource_dir="resources")
 
     @property
     def current_scene(self) -> Scene:
@@ -47,6 +49,7 @@ class Controller:
         self.screen = pyg.display.set_mode(DisplayConfig.SIZE)
         self.clock = pyg.time.Clock()
         self.screen.fill(Colors.BLACK)
+        self.resource_loader.load_all_images()
 
     def populate(self, scenes: list[Scene] = []) -> None:
         """
