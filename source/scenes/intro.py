@@ -2,11 +2,8 @@
 Intro scene module.
 """
 
-import pygame
+import pygame as pyg
 from ..scene import Scene
-from ..constants import Colors, GameConfig
-from ..components import Button
-from ..components import Text
 
 
 class IntroScene(Scene):
@@ -21,51 +18,35 @@ class IntroScene(Scene):
         Create a new intro scene.
         """
         super().__init__("intro", controller)
-        self.buttons: list[Button] = []
-        self.texts: list[Text] = []
+        self.background: pyg.Surface = None
+        self.zoom_factor: float = 1.0
+        self.zoom_speed: float = 0.3
+        self.time_elapsed: float = 0.0
+        self.max_time: float = 3.0
+        self.background_size: tuple[int, int] = (1000, 600)
 
     def on_enter(self):
-        self.texts.append(
-            Text(
-                text=f"Welcome to {GameConfig.TITLE}",
-                font=pygame.font.Font(None, 50),
-                font_size=50,
-                font_color=Colors.WHITE,
-                position=(200, 200),
-                scene=self,
-                size=(400, 100),
-                color=Colors.WHITE,
-                name="title_text",
-            )
+        self.background = self.controller.resource_loader.images["screen_loading"]
+        self.background = pyg.transform.scale(self.background, self.background_size)
+
+    def on_exit(self): ...
+
+    def update(self, screen: pyg.Surface, delta_time: float) -> None:
+        self.time_elapsed += delta_time
+        self.zoom_factor += self.zoom_speed * delta_time
+
+        new_width = int(self.background.get_width() * self.zoom_factor)
+        new_height = int(self.background.get_height() * self.zoom_factor)
+        zoomed_background = pyg.transform.scale(
+            self.background, (new_width, new_height)
         )
-        self.buttons.append(
-            Button(
-                action=lambda: self.controller.change_scene("game"),
-                text="Start",
-                font=pygame.font.Font(None, 50),
-                font_size=50,
-                font_color=Colors.WHITE,
-                color=Colors.BLUE,
-                size=(200, 100),
-                position=(300, 300),
-                name="start_button",
-                scene=self,
-            )
-        )
+        x = (screen.get_width() - new_width) // 2
+        y = (screen.get_height() - new_height) // 2
+        screen.blit(zoomed_background, (x, y))
 
-    def on_exit(self):
-        self.buttons.clear()
+        if self.time_elapsed > self.max_time:
+            self.controller.change_scene("main_menu")
 
-    def update(self, screen, delta_time) -> None:
-        screen.fill(Colors.BLACK)
-        for button in self.buttons:
-            button.draw(screen)
-        for text in self.texts:
-            text.draw(screen)
+    def render(self): ...
 
-    def render(self):
-        pass
-
-    def handle_event(self, event) -> None:
-        for button in self.buttons:
-            button.handle_event(event)
+    def handle_event(self, event: pyg.event.Event) -> None: ...
