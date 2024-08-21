@@ -4,6 +4,7 @@ Resources are images, sounds, and other files that are used in the game.
 """
 
 import os
+import pygame as pyg
 
 
 class ResourceLoader:
@@ -23,7 +24,9 @@ class ResourceLoader:
         pass
 
     def load_all_images(self) -> None:
-        pass
+        self.images["screen_loading"] = pyg.image.load(
+            os.path.join(self.resource_dir, "screen_loading.png")
+        )
 
     def load_all_sounds(self) -> None:
         pass
