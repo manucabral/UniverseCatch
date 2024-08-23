@@ -6,8 +6,10 @@ This class is responsible for managing the game.
 import os
 import pygame as pyg
 from .scene import Scene
-from .constants import DisplayConfig, Colors, GameConfig
+from .logger import get_logger
+from .constants import DisplayConfig, Colors, GameConfig, ResourceConfig
 from .resource_loader import ResourceLoader
+from .localizations import Localizations
 
 
 class Controller:
@@ -18,13 +20,21 @@ class Controller:
         The controller is responsible for managing the game.
         After starting, the method `set` must be called to set the configurations.
         """
+        self.logger = get_logger(self.__class__.__name__)
+        self.lang: str = GameConfig.DEFAULT_LANGUAGE
         self.scenes: dict[str, Scene] = {}
         self.scene_id: str = GameConfig.INITIAL_SCENE_ID
         self.screen: pyg.Surface = None
         self.clock: pyg.time.Clock = None
         self.running: bool = True
         self.debug: bool = GameConfig.DEBUG
-        self.resource_loader: ResourceLoader = ResourceLoader(resource_dir="resources")
+        self.resource_loader: ResourceLoader = ResourceLoader(
+            resource_dir=ResourceConfig.RESOURCE_DIR
+        )
+        self.localizations: Localizations = Localizations(
+            localizations_dir=ResourceConfig.LOCALIZATIONS_DIR
+        )
+        self.logger.info("Initialized.")
 
     @property
     def current_scene(self) -> Scene:
@@ -49,7 +59,9 @@ class Controller:
         self.screen = pyg.display.set_mode(DisplayConfig.SIZE)
         self.clock = pyg.time.Clock()
         self.screen.fill(Colors.BLACK)
+        self.localizations.load_all_localizations()
         self.resource_loader.load_all_images()
+        self.logger.info("Configurations set.")
 
     def populate(self, scenes: list[Scene] = []) -> None:
         """
@@ -59,9 +71,13 @@ class Controller:
             scenes (list[Scene]): The scenes to be added to the controller.
         """
         if len(scenes) == 0:
-            raise ValueError("At least one scene must be provided.")
+            msg = "No scenes to populate."
+            self.logger.error(msg)
+            raise ValueError(msg)
         for scene in scenes:
             self.add_scene(scene)
+        if self.debug:
+            self.logger.debug("Scenes populated.")
 
     def add_scene(self, scene: Scene) -> None:
         """
@@ -72,7 +88,7 @@ class Controller:
         """
         self.scenes[scene.name] = scene
         if self.debug:
-            print(f"Scene {scene.name} added.")
+            self.logger.debug(f"Scene added: {scene.name}")
 
     def change_scene(self, scene_id: str) -> None:
         """
@@ -81,8 +97,12 @@ class Controller:
         Args:
             scene_id (str): The id of the scene to change to.
         """
+        last_scene = self.scene_id
         self.current_scene.on_exit()
         self.scene_id = scene_id
+        self.current_scene.on_enter()
+        if self.debug:
+            self.logger.debug(f"Scene changed: {last_scene} -> {scene_id}")
 
     def event_handler(self) -> None:
         """
