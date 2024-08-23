@@ -17,7 +17,7 @@ class IntroScene(Scene):
         """
         Create a new intro scene.
         """
-        super().__init__("intro", controller)
+        super().__init__("intro", controller, debug=controller.debug)
         self.background: pyg.Surface = None
         self.zoom_factor: float = 1.0
         self.zoom_speed: float = 0.3
@@ -26,10 +26,15 @@ class IntroScene(Scene):
         self.background_size: tuple[int, int] = (1000, 600)
 
     def on_enter(self):
+        self.log("Entering scene.")
         self.background = self.controller.resource_loader.images["screen_loading"]
         self.background = pyg.transform.scale(self.background, self.background_size)
 
-    def on_exit(self): ...
+    def on_exit(self):
+        self.log("Exiting scene.")
+        self.background = None
+        self.zoom_factor = 1.0
+        self.time_elapsed = 0.0
 
     def update(self, screen: pyg.Surface, delta_time: float) -> None:
         self.time_elapsed += delta_time
