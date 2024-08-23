@@ -11,6 +11,7 @@ if __name__ == "__main__":
     controller.populate(
         [
             source.scenes.IntroScene(controller),
+            source.scenes.MainMenuScene(controller),
         ]
     )
     controller.start()
