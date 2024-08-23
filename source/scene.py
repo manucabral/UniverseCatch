@@ -5,6 +5,10 @@ Eg. The intro, main menu, the game itself, etc.
 
 from abc import ABC, abstractmethod
 import pygame as pyg
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .controller import Controller
 
 
 class Scene(ABC):
@@ -12,14 +16,15 @@ class Scene(ABC):
     A scene is a collection of entities that are rendered together.
     """
 
-    def __init__(self, name: str, controller):
+    def __init__(self, name: str, controller: "Controller"):
         """
         Create a new scene with the given name.
 
         Args:
             name (str): The name of the scene.
         """
-        self.controller = controller
+
+        self.controller: "Controller" = controller
         self.name = name
         self.done = False
 
