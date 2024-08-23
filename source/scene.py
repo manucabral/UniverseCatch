@@ -6,6 +6,7 @@ Eg. The intro, main menu, the game itself, etc.
 from abc import ABC, abstractmethod
 import pygame as pyg
 from typing import TYPE_CHECKING
+from .logger import get_logger, UCLogger
 
 if TYPE_CHECKING:
     from .controller import Controller
@@ -16,7 +17,7 @@ class Scene(ABC):
     A scene is a collection of entities that are rendered together.
     """
 
-    def __init__(self, name: str, controller: "Controller"):
+    def __init__(self, name: str, controller: "Controller", debug: bool = False):
         """
         Create a new scene with the given name.
 
@@ -25,8 +26,10 @@ class Scene(ABC):
         """
 
         self.controller: "Controller" = controller
-        self.name = name
-        self.done = False
+        self.name: str = name
+        self.debug: bool = debug
+        self.logger: UCLogger = get_logger(self.name or self.__class__.__name__)
+        self.done: bool = False
 
     @abstractmethod
     def on_enter(self):
@@ -65,3 +68,13 @@ class Scene(ABC):
         Args:
             event (pyg.event.Event): The event to handle.
         """
+
+    def log(self, message: str):
+        """
+        Log a debug message if debugging is enabled.
+
+        Args:
+            message (str): The message to log.
+        """
+        if self.debug:
+            self.logger.debug(message)
