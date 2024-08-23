@@ -40,17 +40,25 @@ class Button(Component):
         self.font_color = font_color
         self.font_object = self.font.render(self.text, True, self.font_color)
         self.font_rect = self.font_object.get_rect(center=self.rect.center)
-        self.action = action
+        self.action = action or (lambda: None)
+        self.logger.debug("Initialized.")
 
     def draw(self, screen: pyg.Surface) -> None:
         """
         Draw the button on the screen.
         """
         super().draw(screen)
-        pyg.draw.rect(screen, self.color, self.rect)
+        if self.is_hovered:
+            pyg.draw.rect(screen, self.color, self.rect)
+            pyg.mouse.set_cursor(pyg.SYSTEM_CURSOR_HAND)
+        else:
+            pyg.mouse.set_cursor(pyg.SYSTEM_CURSOR_ARROW)
+            pyg.draw.rect(screen, self.color, self.rect, 2)
         screen.blit(self.font_object, self.font_rect)
 
     def handle_event(self, event: pyg.event.Event) -> None:
+        super().handle_event(event)
         if event.type == pyg.MOUSEBUTTONDOWN:
-            if self.rect.collidepoint(event.pos):
+            if self.is_hovered:
+                self.log("Clicked")
                 self.action()
