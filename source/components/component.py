@@ -6,6 +6,7 @@ import pygame as pyg
 
 from ..scene import Scene
 from ..logger import get_logger
+from ..constants import Colors
 
 
 class Component:
@@ -17,9 +18,9 @@ class Component:
         self,
         scene: Scene,
         size: tuple[int, int],
-        position: tuple[int, int],
-        color: tuple[int, int, int],
         name: str,
+        position: tuple[int, int] = (0, 0),
+        color: tuple[int, int, int] = Colors.WHITE,
         visible: bool = True,
         debug: bool = False,
     ):
