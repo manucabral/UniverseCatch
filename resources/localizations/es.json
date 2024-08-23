@@ -1,0 +1,19 @@
+{
+    "planets": {
+        "0": "Mercurio",
+        "1": "Venus",
+        "2": "Tierra",
+        "3": "Marte",
+        "4": "Jupiter",
+        "5": "Saturno",
+        "6": "Urano",
+        "7": "Neptuno",
+        "8": "Pluton"
+    },
+    "menu": {
+        "play": "Jugar",
+        "multiplayer": "Multijugador",
+        "settings": "Configuración",
+        "exit": "Salir"
+    }
+}
