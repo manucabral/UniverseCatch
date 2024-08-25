@@ -10,6 +10,7 @@ from .logger import get_logger
 from .constants import DisplayConfig, Colors, GameConfig, ResourceConfig
 from .resource_loader import ResourceLoader
 from .localizations import Localizations
+from .music import Music
 
 
 class Controller:
@@ -34,6 +35,7 @@ class Controller:
         self.localizations: Localizations = Localizations(
             localizations_dir=ResourceConfig.LOCALIZATIONS_DIR
         )
+        self.music: Music = Music(music_path=ResourceConfig.MUSIC_DIR)
         self.logger.info("Initialized.")
 
     @property
@@ -59,6 +61,7 @@ class Controller:
         self.screen = pyg.display.set_mode(DisplayConfig.SIZE)
         self.clock = pyg.time.Clock()
         self.screen.fill(Colors.BLACK)
+        self.music.init_music()
         self.localizations.load_all_localizations()
         self.resource_loader.load_all_images()
         self.logger.info("Configurations set.")
@@ -114,6 +117,7 @@ class Controller:
             if self.debug:
                 pass
             self.current_scene.handle_event(event)
+            self.music.handle_event(event)
 
     def update(self, delta_time: float) -> None:
         """
@@ -132,6 +136,7 @@ class Controller:
             raise RuntimeError("The controller must be set before starting.")
         try:
             self.current_scene.on_enter()
+            self.music.play_music()
             while self.running:
                 time_delta = self.clock.tick(GameConfig.FPS) / 1000.0
                 self.event_handler()
@@ -143,3 +148,12 @@ class Controller:
         finally:
             pyg.quit()
             exit()
+
+    def stop(self) -> None:
+        """
+        Stop the controller.
+        """
+        self.running = False
+        self.logger.info("Stopped by user.")
+        pyg.quit()
+        exit()
