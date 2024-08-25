@@ -11,6 +11,8 @@ class ResourceConfig:
     RESOURCE_DIR: str = "resources"
     LOCALIZATIONS_DIR: str = RESOURCE_DIR + "/localizations"
     PLANETS_DIR: str = RESOURCE_DIR + "/planets"
+    SOUNDS_DIR: str = RESOURCE_DIR + "/sounds"
+    MUSIC_DIR: str = RESOURCE_DIR + "/music"
 
     PLANETS: dict = {
         0: "mercury.png",
@@ -23,4 +25,9 @@ class ResourceConfig:
         7: "neptune.png",
         8: "pluto.png",
         9: "bellerophonn.png",
+    }
+
+    MUSICS: dict = {
+        "Calm Cosmos": "calm_cosmos.mp3",
+        "Deep Space": "deep_space.mp3",
     }
