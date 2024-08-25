@@ -143,8 +143,8 @@ class Controller:
                 self.update(time_delta)
                 pyg.display.update()
         except Exception as exc:
-            print(f"An error occurred: {exc}")
-            raise exc
+            self.logger.error(f"An error occurred: {exc}")
+            self.stop()
         finally:
             pyg.quit()
             exit()
