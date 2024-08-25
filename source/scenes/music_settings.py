@@ -1,5 +1,5 @@
 """
-Settings scene menu.
+Music Settings scene menu.
 """
 
 import pygame as pyg
@@ -8,16 +8,16 @@ from ..constants import Colors, DisplayConfig
 from ..components import Button
 
 
-class SettingsMenuScene(Scene):
+class MusicSettingsScene(Scene):
     """
     The settings scene.
     """
 
     def __init__(self, controller):
         """
-        Create a new settings scene.
+        Create a new music settings scene.
         """
-        super().__init__("settings_scene", controller, debug=controller.debug)
+        super().__init__("music_settings_scene", controller, debug=controller.debug)
         self.background: pyg.Surface = None
         self.buttons: list[Button] = []
 
@@ -70,33 +70,60 @@ class SettingsMenuScene(Scene):
         )
         self.buttons.append(button)
 
+    def toggle_music(self, target: Button):
+        """
+        Toggle the music on and off.
+
+        Args:
+            state (bool): The current state of the music.
+            target (Button): The button that was clicked.
+        """
+        self.controller.music.toggle_pause()
+        state = self.controller.music.paused
+        target.textContent = self.controller.localizations.get_key(
+            "music_settings", self.controller.lang
+        )["off" if state else "on"]
+
     def on_enter(self):
         self.log("Entering scene.")
+
         lang = self.controller.lang
-        settings_menu = self.controller.localizations.get_key("settings", lang)
+        music_settings = self.controller.localizations.get_key("music_settings", lang)
         glob = self.controller.localizations.get_key("global", lang)
 
         # adding buttons with an offset of 100 pixels from the top
         offset_y = 100
+        state = self.controller.music.paused
         self.add_button(
-            "language_btn",
-            settings_menu["language"],
-            lambda: self.controller.change_scene("language_settings_scene"),
+            "state_btn",
+            music_settings["off"] if state else music_settings["on"],
+            lambda: self.toggle_music(self.buttons[0]),
             0,
             offset_y,
         )
         self.add_button(
-            "music_btn",
-            settings_menu["music"],
-            lambda: self.controller.change_scene("music_settings_scene"),
+            "volume_up_btn",
+            music_settings["up"],
+            lambda: self.controller.music.set_volume(
+                min(1.0, self.controller.music.get_volume + 0.1)
+            ),
             1,
+            offset_y,
+        )
+        self.add_button(
+            "volume_down_btn",
+            music_settings["down"],
+            lambda: self.controller.music.set_volume(
+                max(0.0, self.controller.music.get_volume - 0.1)
+            ),
+            2,
             offset_y,
         )
         self.add_button(
             "back_btn",
             glob["back"],
-            lambda: self.controller.change_scene("main_menu"),
-            2,
+            lambda: self.controller.change_scene("settings_scene"),
+            3,
             offset_y,
         )
 

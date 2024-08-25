@@ -13,6 +13,7 @@ if __name__ == "__main__":
             source.scenes.IntroScene(controller),
             source.scenes.MainMenuScene(controller),
             source.scenes.SettingsMenuScene(controller),
+            source.scenes.MusicSettingsScene(controller),
         ]
     )
     controller.start()

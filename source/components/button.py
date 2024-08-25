@@ -46,6 +46,16 @@ class Button(Component):
         self.previous_hover_state: bool = False
         self.logger.debug("Initialized.")
 
+    @property
+    def textContent(self) -> str:
+        return self.text
+
+    @textContent.setter
+    def textContent(self, value: str) -> None:
+        self.text = value
+        self.font_object = self.font.render(self.text, True, self.font_color)
+        self.font_rect = self.font_object.get_rect(center=self.rect.center)
+
     def draw(self, screen: pyg.Surface) -> None:
         """
         Draw the button on the screen.

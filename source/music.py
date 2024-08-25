@@ -1,11 +1,11 @@
 """
-This module contains the music class, responsible for playing music in the game.
+This module is responsible for playing music in the game.
 """
 
 import os
-import pygame as pg
+import pygame as pyg
+from .constants import ResourceConfig
 from .logger import get_logger
-from .constants.resource import ResourceConfig
 
 
 class Music:
@@ -20,18 +20,19 @@ class Music:
         self.logger = get_logger(self.__class__.__name__)
         self.path: str = music_path
         self.debug: bool = debug
-        self.music: pg.mixer.music = None
+        self.music: pyg.mixer.music = None
         self.data: dict = {}
         self.current_track: int = 0
         self.playlist: list[dict] = []
+        self.paused: bool = False
 
     def init_music(self) -> None:
         """
         Initialize the music.
         """
-        pg.mixer.init()
-        pg.mixer.music.set_endevent(pg.USEREVENT + 1)
-        self.music = pg.mixer.music
+        pyg.mixer.init()
+        pyg.mixer.music.set_endevent(pyg.USEREVENT + 1)
+        self.music = pyg.mixer.music
 
         for music_item in ResourceConfig.MUSICS:
             self.load_music(music_item)
@@ -50,6 +51,13 @@ class Music:
         self.playlist.append({"name": music_name, "file": music_file})
         self.logger.info(f"{music_name} loaded ({music_file}).")
 
+    @property
+    def get_busy(self) -> bool:
+        """
+        Check if the music is currently playing.
+        """
+        return self.music.get_busy()
+
     def play_current_track(self) -> None:
         """
         Play the current track.
@@ -59,6 +67,7 @@ class Music:
         self.logger.info(f"Playing {track['name']} ({music_file}).")
         self.music.load(music_file)
         self.music.play()
+        self.paused = False
 
     def play_music(self) -> None:
         """
@@ -75,6 +84,22 @@ class Music:
         Stop the music.
         """
         self.music.stop()
+        self.paused = False
+
+    def toggle_pause(self) -> None:
+        """
+        Toggle the pause state of the music.
+        """
+        if self.paused:
+            self.music.unpause()
+            self.paused = False
+            if self.debug:
+                self.logger.info("Music unpaused.")
+        else:
+            self.music.pause()
+            self.paused = True
+            if self.debug:
+                self.logger.info("Music paused.")
 
     def set_volume(self, volume: float) -> None:
         """
@@ -82,11 +107,18 @@ class Music:
         """
         self.music.set_volume(volume)
 
-    def handle_event(self, event: pg.event.Event) -> None:
+    @property
+    def get_volume(self) -> float:
+        """
+        Get the volume of the music.
+        """
+        return self.music.get_volume()
+
+    def handle_event(self, event: pyg.event.Event) -> None:
         """
         Handle events related to music playback.
         """
-        if event.type == pg.USEREVENT + 1:
+        if event.type == pyg.USEREVENT + 1:
             self.current_track = (self.current_track + 1) % len(self.playlist)
             if self.debug:
                 self.logger.debug(
