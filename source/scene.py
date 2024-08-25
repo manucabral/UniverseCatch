@@ -55,12 +55,6 @@ class Scene(ABC):
         """
 
     @abstractmethod
-    def render(self):
-        """
-        Render the scene.
-        """
-
-    @abstractmethod
     def handle_event(self, event: pyg.event.Event):
         """
         Handle an event.

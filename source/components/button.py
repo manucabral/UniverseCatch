@@ -34,13 +34,16 @@ class Button(Component):
             See Component class.
         """
         super().__init__(*args, **kwargs)
-        self.text = text
-        self.font = font
-        self.font_size = font_size
-        self.font_color = font_color
-        self.font_object = self.font.render(self.text, True, self.font_color)
-        self.font_rect = self.font_object.get_rect(center=self.rect.center)
+        self.text: str = text
+        self.font: pyg.font.Font = font
+        self.font_size: int = font_size
+        self.font_color: tuple[int, int, int] = font_color
+        self.font_object: pyg.Surface = self.font.render(
+            self.text, True, self.font_color
+        )
+        self.font_rect: pyg.Rect = self.font_object.get_rect(center=self.rect.center)
         self.action = action or (lambda: None)
+        self.previous_hover_state: bool = False
         self.logger.debug("Initialized.")
 
     def draw(self, screen: pyg.Surface) -> None:
@@ -50,11 +53,15 @@ class Button(Component):
         super().draw(screen)
         if self.is_hovered:
             pyg.draw.rect(screen, self.color, self.rect)
-            pyg.mouse.set_cursor(pyg.SYSTEM_CURSOR_HAND)
+            if not self.previous_hover_state:
+                pyg.mouse.set_cursor(pyg.SYSTEM_CURSOR_HAND)
         else:
-            pyg.mouse.set_cursor(pyg.SYSTEM_CURSOR_ARROW)
             pyg.draw.rect(screen, self.color, self.rect, 2)
+            if self.previous_hover_state:
+                pyg.mouse.set_cursor(pyg.SYSTEM_CURSOR_ARROW)
+
         screen.blit(self.font_object, self.font_rect)
+        self.previous_hover_state = self.is_hovered
 
     def handle_event(self, event: pyg.event.Event) -> None:
         super().handle_event(event)
