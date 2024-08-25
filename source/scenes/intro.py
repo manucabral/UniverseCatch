@@ -52,6 +52,4 @@ class IntroScene(Scene):
         if self.time_elapsed > self.max_time:
             self.controller.change_scene("main_menu")
 
-    def render(self): ...
-
     def handle_event(self, event: pyg.event.Event) -> None: ...

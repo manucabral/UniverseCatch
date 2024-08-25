@@ -1,32 +1,28 @@
 """
-Main menu scene.
+Settings scene menu.
 """
 
 import pygame as pyg
 from ..scene import Scene
 from ..constants import Colors, DisplayConfig
 from ..components import Button
-from ..components import Image
 
 
-class MainMenuScene(Scene):
+class SettingsMenuScene(Scene):
     """
-    The main menu scene.
-
-    This scene is shown when the game starts.
+    The settings scene.
     """
 
     def __init__(self, controller):
         """
-        Create a new intro scene.
+        Create a new settings scene.
         """
-        super().__init__("main_menu", controller, debug=controller.debug)
+        super().__init__("settings_scene", controller, debug=controller.debug)
         self.background: pyg.Surface = None
         self.buttons: list[Button] = []
-        self.logo: Image = None
 
     def calculate_btn_position(
-        self, button_width: int, button_height: int, index: int
+        self, button_width: int, button_height: int, index: int, offset_y: int = 0
     ) -> tuple[int, int]:
         """
         Calculate the position of the button based on the index.
@@ -35,17 +31,16 @@ class MainMenuScene(Scene):
             button_width (int): The width of the button.
             button_height (int): The height of the button.
             index (int): The index of the button.
+            offset_y (int): The vertical offset for the initial position.
 
         Returns:
             tuple[int, int]: The position of the button.
         """
         btn_x = (DisplayConfig.WIDTH - button_width) // 2
-        btn_y = (DisplayConfig.HEIGHT - button_height) // 2 + index * (
-            button_height + 10
-        )
+        btn_y = offset_y + index * (button_height + 10)
         return btn_x, btn_y
 
-    def add_button(self, name: str, text: str, action, index: int):
+    def add_button(self, name: str, text: str, action, index: int, offset_y: int = 0):
         """
         Add a button to the scene.
 
@@ -54,9 +49,12 @@ class MainMenuScene(Scene):
             text (str): The text of the button.
             action (callable): The action to perform when the button is clicked.
             index (int): The index of the button.
+            offset_y (int): The vertical offset for the initial position.
         """
         button_width, button_height = 200, 50
-        position = self.calculate_btn_position(button_width, button_height, index)
+        position = self.calculate_btn_position(
+            button_width, button_height, index, offset_y
+        )
         button = Button(
             scene=self,
             name=name,
@@ -73,53 +71,45 @@ class MainMenuScene(Scene):
         self.buttons.append(button)
 
     def on_enter(self):
-        """
-        Called when the scene is entered.
-        """
         self.log("Entering scene.")
         lang = self.controller.lang
-        menu = self.controller.localizations.get_key("menu", lang)
+        settings_menu = self.controller.localizations.get_key("settings", lang)
+        glob = self.controller.localizations.get_key("global", lang)
 
-        self.logo = Image(
-            image=self.controller.resource_loader.images["logo"],
-            scene=self,
-            name="logo",
-            position=(DisplayConfig.WIDTH // 4, 50),
-            size=(DisplayConfig.WIDTH // 2, 200),
-            debug=self.debug,
-        )
-
-        # adding buttons
+        # adding buttons with an offset of 100 pixels from the top
+        offset_y = 100
         self.add_button(
-            "play_btn",
-            menu["play"],
-            lambda: self.controller.change_scene("play_scene"),
+            "language_btn",
+            settings_menu["language"],
+            lambda: self.controller.change_scene("language_config"),
             0,
+            offset_y,
         )
         self.add_button(
-            "multiplayer_btn",
-            menu["multiplayer"],
-            lambda: self.controller.change_scene("multiplayer_menu_scene"),
+            "music_btn",
+            settings_menu["music"],
+            lambda: self.controller.change_scene("music_config"),
             1,
+            offset_y,
         )
         self.add_button(
-            "settings_btn",
-            menu["settings"],
-            lambda: self.controller.change_scene("settings_scene"),
+            "back_btn",
+            glob["back"],
+            lambda: self.controller.change_scene("main_menu"),
             2,
+            offset_y,
         )
-        self.add_button("exit_btn", menu["exit"], lambda: self.controller.stop(), 3)
 
     def on_exit(self):
         self.log("Exiting scene.")
+        self.background = None
         self.buttons.clear()
+
+    def handle_event(self, event: list[pyg.event.Event]) -> None:
+        for button in self.buttons:
+            button.handle_event(event)
 
     def update(self, screen: pyg.Surface, delta_time: float) -> None:
         screen.fill(Colors.BLACK)
         for button in self.buttons:
             button.draw(screen)
-        self.logo.draw(screen)
-
-    def handle_event(self, event: pyg.event.Event) -> None:
-        for button in self.buttons:
-            button.handle_event(event)
