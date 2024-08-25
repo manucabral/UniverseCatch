@@ -10,10 +10,24 @@
         "7": "Neptuno",
         "8": "Pluton"
     },
+    "global": {
+        "back": "Volver"
+    },
     "menu": {
         "play": "Jugar",
         "multiplayer": "Multijugador",
         "settings": "Configuración",
         "exit": "Salir"
+    },
+    "settings": {
+        "language": "Idioma",
+        "music": "Música",
+        "back": "Volver"
+    },
+    "music_settings": {
+        "on": "Encendido",
+        "off": "Apagado",
+        "up": "Subir",
+        "down": "Bajar"
     }
 }
