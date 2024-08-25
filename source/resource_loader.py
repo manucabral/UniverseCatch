@@ -33,6 +33,7 @@ class ResourceLoader:
         self.images["screen_loading"] = pyg.image.load(
             os.path.join(self.dir, "screen_loading.png")
         )
+        self.images["logo"] = pyg.image.load(os.path.join(self.dir, "logo.png"))
 
         """
         Load all image planets
