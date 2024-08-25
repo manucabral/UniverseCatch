@@ -91,7 +91,7 @@ class MainMenuScene(Scene):
             lambda: self.controller.change_scene("settings_scene"),
             1,
         )
-        self.add_button("exit_btn", menu["exit"], lambda: self.controller.quit(), 2)
+        self.add_button("exit_btn", menu["exit"], lambda: self.controller.stop(), 2)
 
     def on_exit(self):
         self.log("Exiting scene.")
