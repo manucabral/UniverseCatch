@@ -25,9 +25,9 @@
         "back": "Volver"
     },
     "music_settings": {
-        "on": "Encendido",
-        "off": "Apagado",
-        "up": "Subir",
-        "down": "Bajar"
+        "on": "Pausar",
+        "off": "Reproducir",
+        "up": "Subir volumen",
+        "down": "Bajar volumen"
     }
 }
