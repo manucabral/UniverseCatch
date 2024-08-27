@@ -9,4 +9,4 @@ class NetworkConfig:
     """
 
     HOST: str = "localhost"
-    PORT: int = 12345
+    PORT: int = 5642
