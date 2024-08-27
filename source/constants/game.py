@@ -15,4 +15,7 @@ class GameConfig:
     INITIAL_SCENE_ID: str = "intro"
 
     DEFAULT_LANGUAGE: str = "en"
-    LANGUAGES: list[str] = ["en", "es"]
+    LANGUAGES: dict[str, str] = {
+        "en": "English",
+        "es": "Spanish",
+    }
