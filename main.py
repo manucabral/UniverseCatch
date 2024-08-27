@@ -15,6 +15,7 @@ if __name__ == "__main__":
             source.scenes.SettingsMenuScene(controller),
             source.scenes.MusicSettingsScene(controller),
             source.scenes.MultiplayerMenuScene(controller),
+            source.scenes.LanguageSettingsScene(controller),
         ]
     )
     controller.start()

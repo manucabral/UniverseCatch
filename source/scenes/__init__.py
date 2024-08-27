@@ -7,6 +7,7 @@ from .main_menu import MainMenuScene
 from .settings_menu import SettingsMenuScene
 from .music_settings import MusicSettingsScene
 from .multiplayer_menu import MultiplayerMenuScene
+from .language_settings import LanguageSettingsScene
 
 __all__ = [
     "IntroScene",
@@ -14,4 +15,5 @@ __all__ = [
     "SettingsMenuScene",
     "MusicSettingsScene",
     "MultiplayerMenuScene",
+    "LanguageSettingsScene",
 ]
