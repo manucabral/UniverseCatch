@@ -14,5 +14,5 @@ class GameConfig:
     FPS: int = 60
     INITIAL_SCENE_ID: str = "intro"
 
-    DEFAULT_LANGUAGE: str = "es"
+    DEFAULT_LANGUAGE: str = "en"
     LANGUAGES: list[str] = ["en", "es"]
