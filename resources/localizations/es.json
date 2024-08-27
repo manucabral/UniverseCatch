@@ -29,5 +29,9 @@
         "off": "Reproducir",
         "up": "Subir volumen",
         "down": "Bajar volumen"
+    },
+    "multiplayer_menu": {
+        "create": "Crear sala",
+        "join": "Unirse"
     }
 }

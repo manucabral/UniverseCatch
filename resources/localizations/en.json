@@ -29,5 +29,9 @@
         "off": "Play",
         "up": "Volume Up",
         "down": "Volume Down"
+    },
+    "multiplayer_menu": {
+        "create": "Create Room",
+        "join": "Join"
     }
 }
