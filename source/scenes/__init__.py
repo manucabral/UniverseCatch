@@ -6,5 +6,12 @@ from .intro import IntroScene
 from .main_menu import MainMenuScene
 from .settings_menu import SettingsMenuScene
 from .music_settings import MusicSettingsScene
+from .multiplayer_menu import MultiplayerMenuScene
 
-__all__ = ["IntroScene", "MainMenuScene", "SettingsMenuScene", "MusicSettingsScene"]
+__all__ = [
+    "IntroScene",
+    "MainMenuScene",
+    "SettingsMenuScene",
+    "MusicSettingsScene",
+    "MultiplayerMenuScene",
+]
