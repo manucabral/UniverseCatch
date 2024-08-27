@@ -66,6 +66,21 @@ class Controller:
         self.resource_loader.load_all_images()
         self.logger.info("Configurations set.")
 
+    # TODO: maybe move to localizations.py
+    def set_language(self, lang: str) -> None:
+        """
+        Set the language for the controller.
+
+        Args:
+            lang (str): The language to be set.
+        """
+        if lang not in GameConfig.LANGUAGES:
+            msg = f"Language {lang} not found."
+            self.logger.error(msg)
+            return
+        self.lang = lang
+        self.logger.info(f"Language set to {lang}.")
+
     def populate(self, scenes: list[Scene] = []) -> None:
         """
         Populate the controller with the scenes.
