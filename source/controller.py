@@ -142,6 +142,7 @@ class Controller:
             delta_time (float): The time since the last update.
         """
         self.current_scene.update(self.screen, delta_time)
+        self.music.notification.update(self.screen)
 
     def start(self) -> None:
         """

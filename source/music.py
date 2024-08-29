@@ -4,8 +4,9 @@ This module is responsible for playing music in the game.
 
 import os
 import pygame as pyg
-from .constants import ResourceConfig
-from .logger import get_logger
+from source.constants import ResourceConfig
+from source.logger import get_logger
+from source.components.notification import Notification
 
 
 class Music:
@@ -25,6 +26,9 @@ class Music:
         self.current_track: int = 0
         self.playlist: list[dict] = []
         self.paused: bool = False
+        self.notification: Notification = Notification(
+            uniqueId="music", message="Initializing music..."
+        )
 
     def init_music(self) -> None:
         """
@@ -33,6 +37,7 @@ class Music:
         pyg.mixer.init()
         pyg.mixer.music.set_endevent(pyg.USEREVENT + 1)
         self.music = pyg.mixer.music
+        self.notification.init()
 
         for music_item in ResourceConfig.MUSICS:
             self.load_music(music_item)
@@ -68,6 +73,7 @@ class Music:
         self.music.load(music_file)
         self.music.play()
         self.paused = False
+        self.notification.message = f"Playing {track['name']}."
 
     def play_music(self) -> None:
         """
@@ -78,6 +84,7 @@ class Music:
             return
         self.current_track = 0
         self.play_current_track()
+        self.notification.show()
 
     def stop_music(self) -> None:
         """
@@ -95,11 +102,16 @@ class Music:
             self.paused = False
             if self.debug:
                 self.logger.info("Music unpaused.")
+            self.notification.message = (
+                f"Playing {self.playlist[self.current_track]['name']}."
+            )
         else:
             self.music.pause()
             self.paused = True
             if self.debug:
                 self.logger.info("Music paused.")
+            self.notification.message = "Music paused."
+        self.notification.show()
 
     def set_volume(self, volume: float) -> None:
         """
