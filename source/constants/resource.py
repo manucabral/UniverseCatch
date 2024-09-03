@@ -8,6 +8,7 @@ class ResourceConfig:
     Configuration for the game resources.
     """
 
+    CONFIG_FILE: str = "config.json"
     RESOURCE_DIR: str = "resources"
     LOCALIZATIONS_DIR: str = RESOURCE_DIR + "/localizations"
     PLANETS_DIR: str = RESOURCE_DIR + "/planets"
