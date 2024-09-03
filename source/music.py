@@ -118,6 +118,7 @@ class Music:
         Set the volume of the music.
         """
         self.music.set_volume(volume)
+        self.logger.info(f"Volume set to {volume}.")
 
     @property
     def get_volume(self) -> float:
