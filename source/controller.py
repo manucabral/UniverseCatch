@@ -4,6 +4,7 @@ This class is responsible for managing the game.
 """
 
 import os
+import json
 import pygame as pyg
 from .scene import Scene
 from .logger import get_logger
@@ -64,7 +65,37 @@ class Controller:
         self.music.init_music()
         self.localizations.load_all_localizations()
         self.resource_loader.load_all_images()
+        self.load_config()
         self.logger.info("Configurations set.")
+
+    def load_config(self) -> None:
+        """
+        Load the configurations of the controller.
+        """
+        if not os.path.exists(ResourceConfig.CONFIG_FILE):
+            self.logger.warning("Configurations file not found.")
+            return
+        with open(
+            ResourceConfig.CONFIG_FILE, "r", encoding="utf-8", errors="ignore"
+        ) as file:
+            actual_config = json.load(file)
+            self.set_language(actual_config["lang"])
+            self.music.set_volume(float(actual_config["music_volume"]))
+        self.logger.info("Configurations loaded.")
+
+    def save_config(self) -> None:
+        """
+        Save the configurations of the controller.
+        """
+        with open(
+            ResourceConfig.CONFIG_FILE, "w", encoding="utf-8", errors="ignore"
+        ) as file:
+            actual_config = {
+                "lang": self.lang,
+                "music_volume": self.music.get_volume,
+            }
+            json.dump(actual_config, file, indent=4)
+        self.logger.info("Configurations saved.")
 
     # TODO: maybe move to localizations.py
     def set_language(self, lang: str) -> None:
@@ -171,5 +202,6 @@ class Controller:
         """
         self.running = False
         self.logger.info("Stopped by user.")
+        self.save_config()
         pyg.quit()
         exit()
