@@ -33,5 +33,10 @@
     "multiplayer_menu": {
         "create": "Create Room",
         "join": "Join"
+    },
+    "create_room": {
+        "name": "Room Name",
+        "password": "Password",
+        "create": "Create"
     }
 }

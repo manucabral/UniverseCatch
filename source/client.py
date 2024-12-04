@@ -14,7 +14,7 @@ class Client:
     Client class for the game.
     """
 
-    def __init__(self, host: str, port: int = NetworkConfig.PORT):
+    def __init__(self, host: str, port: int = NetworkConfig.PORT, debug: bool = False):
         """
         Initialize the client.
         """
@@ -23,4 +23,5 @@ class Client:
         self.port: int = port
         self.socket: skt.socket = None
         self.running: bool = True
+        self.debug: bool = debug
         self.logger.info("Initialized.")

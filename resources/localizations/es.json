@@ -33,5 +33,10 @@
     "multiplayer_menu": {
         "create": "Crear sala",
         "join": "Unirse"
+    },
+    "create_room": {
+        "name": "Nombre",
+        "password": "Contraseña",
+        "create": "Crear"
     }
 }

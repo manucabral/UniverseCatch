@@ -8,10 +8,12 @@ import json
 import pygame as pyg
 from .scene import Scene
 from .logger import get_logger
-from .constants import DisplayConfig, Colors, GameConfig, ResourceConfig
+from .constants import DisplayConfig, Colors, GameConfig, ResourceConfig, NetworkConfig
 from .resource_loader import ResourceLoader
 from .localizations import Localizations
 from .music import Music
+from .server import Server
+from .client import Client
 
 
 class Controller:
@@ -37,6 +39,9 @@ class Controller:
             localizations_dir=ResourceConfig.LOCALIZATIONS_DIR
         )
         self.music: Music = Music(music_path=ResourceConfig.MUSIC_DIR)
+        self.server: Server = Server(debug=self.debug)
+        self.client: Client = Client(host=NetworkConfig.HOST, debug=self.debug)
+
         self.logger.info("Initialized.")
 
     @property
